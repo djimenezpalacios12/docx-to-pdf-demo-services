@@ -4,8 +4,9 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 import { FileService } from './app.service';
 
 @Controller('files')
@@ -15,7 +16,7 @@ export class appController {
   @Post('convert')
   @UseInterceptors(FileInterceptor('file'))
   async convertToPDF(@UploadedFile() file: Express.Multer.File) {
-    const uploadPath = join(__dirname, '../../uploads', file.originalname);
+    const uploadPath = join(process.cwd(), 'uploads', file.originalname);
     const pdfPath = uploadPath.replace('.docx', '.pdf');
 
     // Guardamos el archivo temporalmente
