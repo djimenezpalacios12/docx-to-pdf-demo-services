@@ -9,6 +9,8 @@ const execPromise = promisify(exec);
 export class FileService {
   async convertDocxToPdf(inputPath: string, outputPath: string): Promise<void> {
     const outputDir = join(outputPath, '..');
+
+    // * Script original para linux/windowss
     // const command = `libreoffice --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
     const command = `/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
 
