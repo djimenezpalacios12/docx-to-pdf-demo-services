@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { join } from 'path';
+import * as os from 'os';
 
 const execPromise = promisify(exec);
 
@@ -12,7 +13,22 @@ export class FileService {
 
     // * Script original para linux/windowss
     // const command = `libreoffice --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
-    const command = `/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
+
+    // * Script para macos
+    // const command = `/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
+
+    // * Solucion con docker/OS
+    // Detectar sistema operativo
+    let libreOfficeCmd = 'libreoffice';
+    if (os.platform() === 'darwin') {
+      // macOS
+      libreOfficeCmd = '/Applications/LibreOffice.app/Contents/MacOS/soffice';
+    } else if (os.platform() === 'win32') {
+      // Windows: si en algún futuro se usa allí
+      libreOfficeCmd = 'soffice.exe';
+    }
+
+    const command = `${libreOfficeCmd} --headless --convert-to pdf --outdir "${outputDir}" "${inputPath}"`;
 
     try {
       await execPromise(command);
